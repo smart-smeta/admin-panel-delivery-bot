@@ -1,4 +1,4 @@
-from app.models import User, UserRole, Product, ProductUnit
+from app.models import User, UserRole, Product, ProductUnit, Order
 
 # ---- Users ----
 
@@ -50,3 +50,22 @@ def delete_product(db, product_id):
         db.delete(product)
         db.commit()
     return product
+
+# ---- Orders ----
+
+def get_orders(db):
+    return db.query(Order).all()
+
+def create_order(db, user_id, status="created", courier_id=None):
+    db_order = Order(user_id=user_id, status=status, courier_id=courier_id)
+    db.add(db_order)
+    db.commit()
+    db.refresh(db_order)
+    return db_order
+
+def delete_order(db, order_id):
+    order = db.query(Order).filter(Order.id == order_id).first()
+    if order:
+        db.delete(order)
+        db.commit()
+    return order
