@@ -7,7 +7,11 @@ from dotenv import load_dotenv
 
 from app.api import users, products, orders, groups, draws
 from app.deps import get_db
-from app.crud import get_users, create_user, delete_user, get_products, create_product, delete_product
+from app.crud import (
+    get_users, create_user, delete_user,
+    get_products, create_product, delete_product,
+    get_orders, create_order, delete_order
+)
 
 load_dotenv()
 
@@ -76,3 +80,28 @@ def delete_product_page(
 ):
     delete_product(db, id)
     return RedirectResponse(url="/products", status_code=303)
+
+@app.get("/orders", response_class=HTMLResponse)
+def orders_page(request: Request, db=Depends(get_db)):
+    return templates.TemplateResponse("orders.html", {"request": request, "orders": get_orders(db)})
+
+@app.post("/orders", response_class=RedirectResponse)
+def add_order_page(
+    request: Request,
+    user_id: int = Form(...),
+    status: str = Form("created"),
+    courier_id: str = Form(None),
+    db=Depends(get_db)
+):
+    courier_val = int(courier_id) if courier_id else None
+    create_order(db, user_id=user_id, status=status, courier_id=courier_val)
+    return RedirectResponse(url="/orders", status_code=303)
+
+@app.post("/orders/delete", response_class=RedirectResponse)
+def delete_order_page(
+    request: Request,
+    id: int = Form(...),
+    db=Depends(get_db)
+):
+    delete_order(db, id)
+    return RedirectResponse(url="/orders", status_code=303)
