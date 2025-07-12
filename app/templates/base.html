@@ -1,1 +1,30 @@
-
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Панель Администратора{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='bootstrap.min.css') }}">
+    <style>
+        body { padding-top: 60px; }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Админ-панель</a>
+        <div>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" href="/users">Пользователи</a></li>
+                <li class="nav-item"><a class="nav-link" href="/products">Товары</a></li>
+                <li class="nav-item"><a class="nav-link" href="/orders">Заказы</a></li>
+                <li class="nav-item"><a class="nav-link" href="/groups">Группы</a></li>
+                <li class="nav-item"><a class="nav-link" href="/draws">Розыгрыши</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+</body>
+</html>
