@@ -1,1 +1,54 @@
-
+{% extends "base.html" %}
+{% block title %}Пользователи{% endblock %}
+{% block content %}
+<div class="mt-4">
+    <h2>Пользователи</h2>
+    <form class="row g-2 mb-3" method="post" action="/users">
+        <div class="col-auto">
+            <input type="text" class="form-control" name="name" placeholder="Имя" required>
+        </div>
+        <div class="col-auto">
+            <input type="number" class="form-control" name="tg_id" placeholder="Telegram ID">
+        </div>
+        <div class="col-auto">
+            <select class="form-select" name="role">
+                <option value="user">Пользователь</option>
+                <option value="admin">Администратор</option>
+                <option value="courier">Курьер</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Добавить</button>
+        </div>
+    </form>
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>Имя</th>
+                <th>Telegram ID</th>
+                <th>Роль</th>
+                <th>Активен</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.tg_id or '' }}</td>
+                <td>{{ user.role }}</td>
+                <td>{{ 'Да' if user.is_active else 'Нет' }}</td>
+                <td>
+                    <form method="post" action="/users/delete" style="display:inline">
+                        <input type="hidden" name="id" value="{{ user.id }}">
+                        <button class="btn btn-sm btn-danger" type="submit">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
