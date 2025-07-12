@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 from enum import Enum
+from datetime import datetime
 
 # ---- Users ----
 
@@ -48,5 +49,25 @@ class ProductCreate(ProductBase):
 
 class ProductRead(ProductBase):
     id: int
+    class Config:
+        orm_mode = True
+
+# ---- Orders ----
+
+class OrderBase(BaseModel):
+    user_id: int
+    status: str = "created"
+    courier_id: Optional[int] = None
+
+class OrderCreate(OrderBase):
+    pass
+
+class OrderRead(OrderBase):
+    id: int
+    user_id: int
+    status: str
+    courier_id: Optional[int]
+    created_at: datetime
+
     class Config:
         orm_mode = True
