@@ -1,11 +1,11 @@
 import enum
-from sqlalchemy import Column, Integer, String, Float, Enum, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, Enum, Boolean, ForeignKey, DateTime
 from sqlalchemy.orm import declarative_base
+from datetime import datetime
 
 Base = declarative_base()
 
 # ---- Users ----
-
 class UserRole(str, enum.Enum):
     admin = "admin"
     user = "user"
@@ -20,7 +20,6 @@ class User(Base):
     is_active = Column(Boolean, default=True)
 
 # ---- Products ----
-
 class ProductUnit(str, enum.Enum):
     gram = "грамм"
     kg = "килограмм"
@@ -34,3 +33,12 @@ class Product(Base):
     name = Column(String, nullable=False)
     unit = Column(Enum(ProductUnit), nullable=False)
     min_qty = Column(Float, default=1)
+
+# ---- Orders ----
+class Order(Base):
+    __tablename__ = "orders"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    status = Column(String, default="created")
+    courier_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
